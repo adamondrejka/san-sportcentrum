@@ -1,0 +1,71 @@
+{% extends 'administration/base.html' %}
+
+{% block content %}
+
+    <div class="row-fluid">
+
+    <div class="col-lg-12 col-sm-12 col-md-12">
+
+    <a href="{% url 'admin-uzivatel-create' %}" class="btn btn-primary btn-small"><i class="icon-plus"></i> &nbsp; Přidání uživatele</a>
+
+        <h4>Seznam uživatelů</h4>
+
+        {% for m in messages %}
+        <div class="alert alert-info">{{ m }}</div>
+        {% endfor %}
+        <span title="Celkem {{ uzivatele.count }}" class="label label-info tip-left">Celkem: {{ uzivatele.count }}</span> <br>
+
+            <table class="table table-bordered table-striped table-responsive">
+                <thead>
+                    <tr>
+                        <th>Email</th>
+                        <th>Jméno</th>
+                        <th>Příjmení</th>
+                        <th>Aktivní</th>
+                        <th class="width-100">Akce</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for u in uzivatele %}
+                    <tr>
+                    <td>{{ u.email }}</td>
+                    <td>{{ u.jmeno}}</td>
+                    <td>{{ u.prijmeni}}</td>
+                    <td>{{ u.is_active}}</td>
+
+                        <td><a href="{% url 'admin-uzivatel-update' u.id %}" class="btn btn-xs btn-info" id="name">Upravit</a>
+                            <a href="{% url 'admin-uzivatel-delete' u.id %}" class="btn btn-xs btn-danger" id="name">Smazat</a>
+                        </td>
+
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="3">Zatím nebylo vloženo žádné sportovní centrum</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+    {% if is_paginated %}
+    <div class="pagination">
+        <ul>
+            {% if page_obj.has_previous %}
+            <li><a href="?page={{ page_obj.previous_page_number }}">Předchozí</a></li>
+            {% endif %}
+            {% for pg in paginator.page_range %}
+            {% if page_obj.number == pg %}
+            <li class="active"><a href="?page={{ pg }}">{{ pg }}</a></li>
+            {% else %}
+            <li><a href="?page={{ pg }}">{{ pg }}</a></li>
+            {% endif %}
+            {% endfor %}
+            {% if page_obj.has_next  %}
+            <li><a href="?page={{ page_obj.next_page_number }}">Další</a></li>
+            {% endif %}
+        </ul>
+    </div> <!-- /.pagination -->
+    {% endif %}
+    </div>
+</div> <!-- /.row-fluid -->
+
+{% endblock %}

@@ -4,7 +4,7 @@ from django.conf.urls import patterns, include, url
 # Uncomment the next two lines to enable the admin:
 # from django.contrib import admin
 # admin.autodiscover()
-from administration.views import VoucherList, VoucherCreate, VoucherUpdate, VoucherDelete, SportovisteList, SportovisteCreate, SportovisteUpdate, SportovisteDelete, SportovniCentrumList, SportovniCentrumCreate, SportovniCentrumUpdate, SportovniCentrumDelete, RezervaceDelete, RezervaceDetail, RezervaceList
+from administration.views import VoucherList, VoucherCreate, VoucherUpdate, VoucherDelete, SportovisteList, SportovisteCreate, SportovisteUpdate, SportovisteDelete, SportovniCentrumList, SportovniCentrumCreate, SportovniCentrumUpdate, SportovniCentrumDelete, RezervaceDelete, RezervaceDetail, RezervaceList, UzivatelList, UzivatelCreate, UzivatelUpdate, UzivatelDelete
 
 
 urlpatterns = patterns('',
@@ -28,5 +28,11 @@ urlpatterns = patterns('',
     url(r'^rezervace/$', RezervaceList.as_view(), name='admin-rezervace'),
     url(r'^rezervace/(?P<pk>\d+)/$', RezervaceDetail.as_view(), name='admin-rezervace-detail'),
     url(r'^rezervace/delete/(?P<pk>\d+)/$', RezervaceDelete.as_view(), name='admin-rezervace-delete'),
+
+    url(r'^uzivatele/$', UzivatelList.as_view(), name='admin-uzivatele'),
+    url(r'^uzivatel/add/$', UzivatelCreate.as_view(), name='admin-uzivatel-create'),
+    url(r'^uzivatel/(?P<pk>\d+)/$', UzivatelUpdate.as_view(), name='admin-uzivatel-update'),
+    url(r'^uzivatel/delete/(?P<pk>\d+)/$', UzivatelDelete.as_view(), name='admin-uzivatel-delete'),
+
 )
 

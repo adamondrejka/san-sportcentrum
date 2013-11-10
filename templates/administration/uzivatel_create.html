@@ -1,0 +1,25 @@
+{% extends 'administration/base.html' %}
+
+{% block content %}
+
+    <div class="row">
+        <div class="col-lg-6 col-med-12">
+            {% for m in messages %}
+                <div class="alert alert-info">{{ m }}</div>
+            {% endfor %}
+            <form method="post">
+                <fieldset>
+                {% load bootstrap %}
+
+                {{ form|bootstrap }}
+                {% csrf_token %}
+                </fieldset>
+                <input type="submit" class="btn btn-primary" value="Odeslat">
+            </form>
+
+
+        </div>
+    </div>
+
+
+{% endblock %}

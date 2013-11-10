@@ -5,19 +5,15 @@ from .managers import UserManager
 
 
 class User(AbstractBaseUser, PermissionsMixin):
-    jmeno = models.CharField(max_length=40, null=True, blank=True)
+    jmeno = models.CharField(max_length=40, null=True)
     prijmeni = models.CharField(max_length=40, null=True)
 
     email = models.EmailField(db_index=True, unique=True, verbose_name=u"Email")
     RC = models.CharField(max_length=12)
     telefon = models.CharField(max_length=25)
 
-    is_active = models.BooleanField(default=False)
-    is_manager = models.BooleanField(default=False)
-    # user wants to reset his password
-    reset_password = models.BooleanField(default=False)
-
-    facebook_id = models.CharField(max_length=80)
+    is_active = models.BooleanField(default=False, verbose_name=u"Aktivován")
+    is_manager = models.BooleanField(default=False, verbose_name=u"Zaměstnanec")
 
     def get_full_name(self):
         return "{0} {1}".format(self.jmeno, self.prijmeni) if self.jmeno and self.prijmeno else self.email

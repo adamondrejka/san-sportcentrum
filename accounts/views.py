@@ -83,7 +83,7 @@ def registration_view(request):
                 user.prijmeni = prijmeni
                 user.rodne_cislo = rodne_cislo
                 user.telefon = telefon
-
+                user.save()
 
                 return render(request, 'accounts/registration.html',
                               {

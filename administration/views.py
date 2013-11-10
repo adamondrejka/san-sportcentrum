@@ -7,8 +7,9 @@ from django.core.urlresolvers import reverse_lazy
 from django.shortcuts import render, redirect
 from django.utils.decorators import method_decorator
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, DetailView
-from administration.forms import VoucherForm, SportovisteForm, SportovisteMistoFormSet
-from core.models import Voucher, Sportoviste, SportovniCentrum, Rezervace
+from administration.forms import VoucherForm, SportovisteForm, SportovisteMistoFormSet, UzivatelForm
+from core.models import Voucher, Sportoviste, SportovniCentrum, Rezervace, User
+
 
 def staff_member_required2(view_func):
     """
@@ -221,4 +222,50 @@ class RezervaceDetail(StaffMemberRequiredMixin, DetailView):
 class RezervaceDelete(StaffMemberRequiredMixin, DeleteView):
     model = Rezervace
     success_url = reverse_lazy('admin-rezervace')
+    template_name = 'administration/check_delete.html'
+
+
+class UzivatelList(StaffMemberRequiredMixin, ListView):
+    model = User
+    paginate_by = 50
+    queryset = User.objects.all().order_by('email')
+    template_name = "administration/uzivatel_list.html"
+    context_object_name = 'uzivatele'
+
+
+class UzivatelCreate(StaffMemberRequiredMixin, CreateView):
+    model = User
+    template_name = 'administration/uzivatel_create.html'
+    success_url = reverse_lazy('admin-uzivatel-create')
+    form_class = UzivatelForm
+
+    # Valid
+    def form_valid(self, form):
+        messages.success(self.request, u"Uživatel byl úspěšně přidán")
+        return super(UzivatelCreate, self).form_valid(form)
+
+    # Invalid
+    def form_invalid(self, form):
+        return super(UzivatelCreate, self).form_invalid(form)
+
+
+class UzivatelUpdate(StaffMemberRequiredMixin, UpdateView):
+    model = User
+    template_name = 'administration/uzivatel_create.html'
+    success_url = reverse_lazy('admin-uzivatele')
+    form_class = UzivatelForm
+
+    # Valid
+    def form_valid(self, form):
+        messages.success(self.request, u"Uživatel bylo úspěšně uložen")
+        return super(UzivatelUpdate, self).form_valid(form)
+
+    # Invalid
+    def form_invalid(self, form):
+        return super(UzivatelUpdate, self).form_invalid(form)
+
+
+class UzivatelDelete(StaffMemberRequiredMixin, DeleteView):
+    model = User
+    success_url = reverse_lazy('admin-uzivatele')
     template_name = 'administration/check_delete.html'
