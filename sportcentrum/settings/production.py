@@ -1,2 +1,6 @@
 # -*- coding: utf-8 -*- 
-__author__ = 'adam'
+
+from .base import *
+
+DEBUG = True
+ALLOWED_HOSTS = ['sportcentrum.apellia.cz',]

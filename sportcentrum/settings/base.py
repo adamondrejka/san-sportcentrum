@@ -10,6 +10,7 @@ ADMINS = (
 )
 
 PROJECT_DIR = os.path.abspath(os.path.dirname(__name__))
+#PROJECT_DIR = '/home/apps/app_00258/app/'
 MANAGERS = ADMINS
 
 DATABASES = {
