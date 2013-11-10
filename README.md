@@ -11,8 +11,8 @@ Je potřeba mít nainstalovaný "Python 2.6.x a vyšší". Dále balíčkový sy
 Stáhněte reposítář k sobě do počítače přes git nebo jako archiv přes Github a rozbalte. Následující postup je pro uživatele Linuxu.
 
 1. Spusťte terminál
-2. (nepovinné) Vytvořte si nový virtualenvironemt a aktivujte jej.
-3. Nainstalujte všechny závislosti pomocí ``` pip install -r requirements.txt ``` (je potřeba rootosvkých práv, pokud nepracujete ve virtualenv)
+2. (nepovinné) Vytvořte si nový virtualenvironemt pomocí ``` virtualenv ENV ```, následně aktivujte ``` source ENV/bin/activate ```
+3. Nainstalujte všechny závislosti pomocí ``` pip install -r requirements.txt ``` (je potřeba rootovských práv, pokud nepracujete ve virtualenv)
 4. Vytvořte první databázi příkazem ``` python manage.py syncdb --settings=sportcentrum.settings.base ``` . Vytvořte i administrátorský účet.
 
 Spuštění
