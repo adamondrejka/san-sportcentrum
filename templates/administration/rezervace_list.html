@@ -1,0 +1,74 @@
+{% extends 'administration/base.html' %}
+
+{% block content %}
+
+    <div class="row-fluid">
+
+    <div class="col-lg-12 col-sm-12 col-md-12">
+
+
+    <h4>Seznam rezervací</h4>
+
+    {% for m in messages %}
+    <div class="alert alert-info">{{ m }}</div>
+    {% endfor %}
+    <span title="Celkem {{ rezervace.count }}" class="label label-info tip-left">Celkem rezervací: {{ rezervace.count }}</span> <br>
+
+        <table class="table table-bordered table-striped table-responsive">
+            <thead>
+                <tr>
+                    <th>Nazev</th>
+                    <th>Zákazník</th>
+                    <th>Od</th>
+                    <th>Do</th>
+                    <th>Cena</th>
+                    <th>Stav</th>
+                    <th class="width-100">Akce</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for r in rezervace %}
+                <tr>
+                <td>{{ r }}</td>
+                <td>{{ r.zakaznik }}</td>
+                <td>{{ r.rezervace_od }}</td>
+                <td>{{ r.rezervace_do }}</td>
+                <td>{{ r.cena }}</td>
+                <td>{{ r.stav }}</td>
+
+                    <td><a href="{% url 'admin-rezervace-detail' r.id %}" class="btn btn-xs btn-info" id="name">Detail</a>
+
+                    </td>
+
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="7">Zatím nebyla vloženoa žádná rezervace</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+    {% if is_paginated %}
+    <div class="pagination">
+        <ul>
+            {% if page_obj.has_previous %}
+            <li><a href="?page={{ page_obj.previous_page_number }}">Předchozí</a></li>
+            {% endif %}
+            {% for pg in paginator.page_range %}
+            {% if page_obj.number == pg %}
+            <li class="active"><a href="?page={{ pg }}">{{ pg }}</a></li>
+            {% else %}
+            <li><a href="?page={{ pg }}">{{ pg }}</a></li>
+            {% endif %}
+            {% endfor %}
+            {% if page_obj.has_next  %}
+            <li><a href="?page={{ page_obj.next_page_number }}">Další</a></li>
+            {% endif %}
+        </ul>
+    </div> <!-- /.pagination -->
+    {% endif %}
+    </div>
+</div> <!-- /.row-fluid -->
+
+{% endblock %}

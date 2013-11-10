@@ -1,0 +1,29 @@
+{% extends 'web/base.html' %}
+
+{% block content %}
+    <div class="row-fluid">
+        <div class="col-lg-5 col-md-5 col-sm-11">
+            {% if messages %}
+                {% for m in messages %}
+                    {{ m }}
+                {% endfor %}
+            {% endif %}
+
+            {% if success %}
+            <p>User was successfully created. To activate this account, please, confirm link in activation email that we've sent you.</p>
+            {% endif %}
+
+            {% if form %}
+            <form method="post">
+                {% load bootstrap %}
+                {% csrf_token %}
+                {{ form|bootstrap }}
+                <input type="submit" value="Registrovat">
+            </form>
+            {% endif %}
+
+        </div>
+    </div>
+
+    
+{% endblock %}

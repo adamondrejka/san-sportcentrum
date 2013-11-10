@@ -1,0 +1,12 @@
+{% extends 'administration/base.html' %}
+
+{% block content %}
+
+    <div class="row-fluid">
+    <form action="" method="post">{% csrf_token %}
+    <p>Opravdu chcete smazat "{{ object }}"?</p>
+    <input type="submit" value="Potvrdit" />
+    </form>
+    </div>
+
+{% endblock %}

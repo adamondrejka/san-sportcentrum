@@ -1,0 +1,44 @@
+{% extends 'administration/base.html' %}
+
+{% block content %}
+
+    <div class="row">
+        <div class="col-lg-6 col-med-12">
+            {% for m in messages %}
+                <div class="alert alert-info">{{ m }}</div>
+            {% endfor %}
+            <table class="table table-bordered vertical-middle">
+                <tbody>
+                     <tr>
+                        <td><strong>Misto</strong></td>
+                        <td>{{ object.misto }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Zákazník</strong></td>
+                        <td>{{ object.zakaznik}}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Cena</strong></td>
+                        <td>{{ object.cena }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Rezervace od</strong></td>
+                        <td>{{ object.rezervace_od }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Rezervace do</strong></td>
+                        <td>{{ object.rezervace_do }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Stav</strong></td>
+                        <td>{{ object.stav }}</td>
+                    </tr>
+
+                </tbody>
+            </table>
+
+
+        </div>
+    </div>
+
+{% endblock %}

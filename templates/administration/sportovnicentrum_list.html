@@ -1,0 +1,66 @@
+{% extends 'administration/base.html' %}
+
+{% block content %}
+
+    <div class="row-fluid">
+
+    <div class="col-lg-12 col-sm-12 col-md-12">
+
+    <a href="{% url 'admin-sportovnicentrum-create' %}" class="btn btn-primary btn-small"><i class="icon-plus"></i> &nbsp; Přidání sportovního centra</a>
+
+        <h4>Seznam sportovníchcenter</h4>
+
+        {% for m in messages %}
+        <div class="alert alert-info">{{ m }}</div>
+        {% endfor %}
+        <span title="Celkem {{ sportovnicentra.count }}" class="label label-info tip-left">Celkem: {{ sportovnicentra.count }}</span> <br>
+
+            <table class="table table-bordered table-striped table-responsive">
+                <thead>
+                    <tr>
+                        <th>Nazev</th>
+                        <th>Adresa</th>
+                        <th class="width-100">Akce</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for s in sportovnicentra %}
+                    <tr>
+                    <td>{{ s.nazev }}</td>
+                    <td>{{ s.adresa}}</td>
+                        <td><a href="{% url 'admin-sportovnicentrum-update' s.id %}" class="btn btn-xs btn-info" id="name">Upravit</a>
+                            <a href="{% url 'admin-sportovnicentrum-delete' s.id %}" class="btn btn-xs btn-danger" id="name">Smazat</a>
+                        </td>
+
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="3">Zatím nebylo vloženo žádné sportovní centrum</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+    {% if is_paginated %}
+    <div class="pagination">
+        <ul>
+            {% if page_obj.has_previous %}
+            <li><a href="?page={{ page_obj.previous_page_number }}">Předchozí</a></li>
+            {% endif %}
+            {% for pg in paginator.page_range %}
+            {% if page_obj.number == pg %}
+            <li class="active"><a href="?page={{ pg }}">{{ pg }}</a></li>
+            {% else %}
+            <li><a href="?page={{ pg }}">{{ pg }}</a></li>
+            {% endif %}
+            {% endfor %}
+            {% if page_obj.has_next  %}
+            <li><a href="?page={{ page_obj.next_page_number }}">Další</a></li>
+            {% endif %}
+        </ul>
+    </div> <!-- /.pagination -->
+    {% endif %}
+    </div>
+</div> <!-- /.row-fluid -->
+
+{% endblock %}

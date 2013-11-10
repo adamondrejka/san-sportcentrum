@@ -1,0 +1,49 @@
+{% extends 'web/base.html' %}
+
+{% block content %}
+
+    <script type="text/javascript">
+        $(function () {
+            $('input[type="email"]').focus();
+        }); // end ready
+    </script>
+
+    <div class="row">
+        <div class="col-lg-6 col-md-12 col-sm-12">
+
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert{% if message.tags %}-{{ message.tags }}{% endif %}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+            <h2 class="form-signin-heading">Přihlášení</h2>
+
+            <form class="form-horizontal" action="{{ full_path }}" method="post">
+                {% csrf_token %}
+                <div class="control-group">
+                    <label class="control-label" for="email">Email</label>
+
+                    <div class="controls">
+                        <input type="email" class="input-block-level" name="email" placeholder="E-Mail"
+                               required="required">
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label class="control-label" for="passwords">Heslo</label>
+
+                    <div class="controls">
+                        <input type="password" class="input-block-level" name="password" placeholder="Heslo"
+                               required="required">
+                    </div>
+                </div>
+                <!-- <label class="checkbox"><input type="checkbox" value="remember-me"> Remember me</label> -->
+                <button class="btn btn-primary" type="submit">Přihlásit se</button>
+            </form>
+        <br>
+            <p>Nebo si <a href="{% url 'accounts-registration' %}">vytvořte nový účet</a></p>
+        </div>
+
+    </div> <!-- /container -->
+
+{% endblock %}
