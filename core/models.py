@@ -77,10 +77,10 @@ class SportovniCentrum(models.Model):
     popis = models.TextField(null=True, blank=True, verbose_name=u"Popis")
 
     def __unicode__(self):
-        return "{} {}".format(self.nazev, self.mesto)
+        return u"{} {}".format(self.nazev, self.mesto)
 
     def adresa(self):
-        return "{} {}".format(self.ulice, self.mesto)
+        return u"{} {}".format(self.ulice, self.mesto)
 
 
 class Sportoviste(models.Model):

@@ -21,3 +21,5 @@ Spuštění
 V terminálu s pracovní cestou v adresáři projektu zadejte příkaz ``` python manage.py runserver --settings=sportcentrum.settings.base ``` . Aplikace by poté měla být dostupná na adrese 127.0.0.1:8000. (adresa a port se vypíše v terminálu po spuštění)
 
 Když vytvoříte nového uživatele, pošle se mu aktivační email. Kvůli nastavování SMTP a problémy se servery a doménami, z kterých se maily posílají, se výstup emailu zobrazí jako textový výpis v terminálu (konzoli), kde jste spouštěli django server.
+
+Dostupná je taky online verze na adrese [http://sportcentrum.apellia.cz/](http://sportcentrum.apellia.cz/)
