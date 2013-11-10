@@ -39,7 +39,7 @@ class UzivatelForm(ModelForm):
 
     def save(self, commit=True):
         user = super(UzivatelForm, self).save(commit=False)
-        heslo = self.cleaned_data['heslo']
+        heslo = self.cleaned_data['pass1']
 
         if heslo:
             user.set_password(heslo)
