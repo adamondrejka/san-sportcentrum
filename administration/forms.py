@@ -38,7 +38,7 @@ class UzivatelForm(ModelForm):
         fields = ['jmeno', 'prijmeni', 'email', 'RC', 'telefon','last_login', 'is_manager', 'is_superuser', 'is_active']
 
     def save(self, commit=True):
-        user = super(UzivatelForm, self).save(commit=False)
+        user = super(UzivatelForm, self).save(commit=commit)
         heslo = self.cleaned_data['pass1']
 
         if heslo:
