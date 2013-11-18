@@ -54,7 +54,7 @@
                   {% if user.is_staff %}
                       <li><a href="{% url 'admin-home' %}">Admin</a></li>
                    {% endif %}
-            <li><a href="">Můj účet</a></li>
+            <li><a href="{% url 'accounts-detail' %}">Můj účet</a></li>
              <li><a href="{% url 'accounts-logout' %}">Odhlásit - <small>{{ user }}</small></a></li>
               {% endif %}
 

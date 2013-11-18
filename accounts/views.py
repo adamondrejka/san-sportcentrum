@@ -114,3 +114,6 @@ def activate_account_view(request):
             messages.error(request, u'Účet již je aktivní nebo je aktivační odkaz nesprávný')
 
         return render(request, 'accounts/activation.html')
+
+def detail_view(request):
+    return render(request, 'accounts/detail.html')

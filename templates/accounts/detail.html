@@ -1,0 +1,34 @@
+{% extends 'web/base.html' %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-lg-6 col-med-12">
+            {% for m in messages %}
+                <div class="alert alert-info">{{ m }}</div>
+            {% endfor %}
+            
+            <h4>Můj účet</h4>
+            
+            <table class="table table-bordered vertical-middle">
+                <tbody>
+                    <tr>
+                        <td><strong>Jméno</strong></td>
+                        <td>{{ user.jmeno }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Příjmení</strong></td>
+                        <td>{{ user.prijmeni }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Telefonní číslo</strong></td>
+                        <td>{{ user.telefon }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>E-Mail</strong></td>
+                        <td>{{ user.email }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}
