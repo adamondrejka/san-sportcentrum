@@ -1,0 +1,51 @@
+{% extends 'web/base.html' %}
+
+{% block content %}
+<div class="row-fluid">
+    <div class="col-lg-12 col-md-12 col-sm-12">
+        <h1>Mé vouchery</h1>
+
+        {% for m in messages %}
+        <div class="alert alert-info">{{ m }}</div>
+        {% endfor %}
+        <h3>Uplatnit voucher</h3>
+        <form class="form-inline" role="form" method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="id_voucher" class="sr-only">ID voucheru:</label>
+                <input type="text" class="form-control" name="id_voucher" id="id_voucher" placeholder="ID voucheru">
+            </div>
+            <button class="btn btn-default">Potvrdit</button>
+        </form>
+        <br>
+        <br>
+        <h3>Uplatněné vouchery</h3>
+        {% if vouchers|length > 0 %}
+            <table class="table table-responsive table-striped">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Platnost od</th>
+                        <th>Platnost do</th>
+                        <th>Částka</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for voucher in vouchers %}
+                    <tr>
+                        <td>{{ voucher.id }}</td>
+                        <td>{{ voucher.platny_od }}</td>
+                        <td>{{ voucher.platny_do }}</td>
+                        <td>{{ voucher.castka }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+        <p>Zatím nebyly uplatněny žádné vouchery</p>
+        {% endif %}
+
+        
+    </div>
+</div>
+{% endblock %}

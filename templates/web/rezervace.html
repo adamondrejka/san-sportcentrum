@@ -5,6 +5,39 @@
     <div class="col-lg-12 col-md-12 col-sm-12">
         <h1>Rezervace</h1>
 
+        <form class="form-inline" role="form" method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="sportovni_centrum" class="sr-only">Sportovní centrum:</label>
+                <select class="form-control">
+                    {% for sc in sport_centers %}
+                        <option value="{{ sc.id }}">{{ sc }}</option>
+                    {% endfor %}
+                </select>
+
+            </div>
+        </form>
+
+    <div id="sportoviste">
+
+    </div>
+
+    <div id="rezervace"></div>
+
+
+    </div>
+
+</div>
+<div class="row-fluid">
+    <div class="col-lg-4 col-md-4 col-sm-6">
+        <h3>Datum</h3>
+        <div id="datepicker"></div>
+    </div>
+    <div class="col-lg-4 col-md-4 col-sm-6">
+        <h3>Vybrané časy</h3>
+    </div>
+    <div class="col-lg-4 col-md-4 col-sm-6">
+        <h3>Legenda</h3>
     </div>
 </div>
 {% endblock %}

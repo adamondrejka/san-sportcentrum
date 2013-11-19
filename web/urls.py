@@ -11,6 +11,8 @@ urlpatterns = patterns('',
     url(r'^rezervace/$', 'web.views.rezervace_view', name='rezervace'),
     url(r'^kontakt/$', 'web.views.kontakt_view', name='web-kontakt'),
     url(r'^o-nas/$', 'web.views.onas_view', name='web-onas'),
+    url(r'^vouchery/$', 'web.views.vouchery_view', name='web-vouchery'),
+    url(r'^nastaveni/$', 'web.views.nastaveni_view', name='web-nastaveni'),
 
     # Uncomment the admin/doc line below to enable admin documentation:
     # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),

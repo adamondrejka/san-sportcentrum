@@ -12,6 +12,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     RC = models.CharField(max_length=12)
     telefon = models.CharField(max_length=25)
 
+    konto = models.FloatField(default=0, verbose_name=u"Konto")
+
     is_active = models.BooleanField(default=False, verbose_name=u"Aktivován")
     is_manager = models.BooleanField(default=False, verbose_name=u"Zaměstnanec")
 
@@ -51,10 +53,17 @@ class User(AbstractBaseUser, PermissionsMixin):
 
         return self.save()
 
+    def add_money(self, money_amount):
+        """ Prida penize na konto uzivatele
+        """
+        self.konto += money_amount
+        self.save()
+
 
 class Voucher(models.Model):
     """
     """
+    id = models.IntegerField(primary_key=True, verbose_name=u"ID voucheru")
     castka = models.FloatField(verbose_name=u"Částka")
     platny_od = models.DateTimeField(verbose_name=u"Platný od", help_text=u"ve tvaru yyyy-mm-dd")
     platny_do = models.DateTimeField(verbose_name=u"Platný do", help_text=u"ve tvaru yyyy-mm-dd")
