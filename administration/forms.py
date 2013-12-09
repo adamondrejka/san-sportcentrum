@@ -35,7 +35,7 @@ class UzivatelForm(ModelForm):
 
     class Meta:
         model = User
-        fields = ['jmeno', 'prijmeni', 'email', 'RC', 'telefon','last_login', 'is_manager', 'is_superuser', 'is_active']
+        fields = ['jmeno', 'prijmeni', 'email', 'RC', 'telefon', 'konto', 'last_login', 'is_manager', 'is_superuser', 'is_active']
 
     def save(self, commit=True):
         user = super(UzivatelForm, self).save(commit=commit)

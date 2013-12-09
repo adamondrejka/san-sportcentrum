@@ -1,8 +1,29 @@
 # -*- coding: utf-8 -*-
 from django import forms
+from django.forms import ModelForm
+from core.models import User
 
 __author__ = 'adam'
 
+
+class UzivatelForm(ModelForm):
+
+    pass1 = forms.CharField(label=u"Heslo", required=False)
+
+    class Meta:
+        model = User
+        fields = ['jmeno', 'prijmeni', 'email', 'RC', 'telefon']
+
+    def save(self, commit=True):
+        user = super(UzivatelForm, self).save(commit=commit)
+        heslo = self.cleaned_data['pass1']
+
+        if heslo:
+            user.set_password(heslo)
+            if commit:
+                user.save()
+
+        return user
 
 class RegistrationForm(forms.Form):
     """

@@ -53,6 +53,17 @@ function pay(){
             }
         })
 }
+function cancelReservation(){
+    $.ajax({
+        url: "/ajax/delete_reservation/?rezervace_id="+$("#rezervace_id").val()
+
+    }).done(function(data){
+            if (data.result == 'ok') {
+                alert("Úspěšně zrušeno");
+            }
+        })
+}
+
 
 function changeSportovniCentrum(){
     $.ajax({
@@ -140,6 +151,7 @@ function changeSportoviste(id_sportoviste) {
 
                 if (!is_edited){
                     // nova rezervace
+                     $("#admin_buttons").hide();
                     $("#rezervace_datum_txt").val($('#datepicker').val());
                     $("#rezervace_datum").val($('#datepicker').val());
                     var minutes = e.target.dataset.minutes;
@@ -167,6 +179,7 @@ function changeSportoviste(id_sportoviste) {
                 }
                 else if(is_edited && is_admin) {
                     // uprava rezervace
+                    $("#admin_buttons").show();
                     $("#rezervace_datum_txt").val(sel_unit.dataset.reservationdate);
                     $("#rezervace_datum").val(sel_unit.dataset.reservationdate);
                     var minutes = e.target.dataset.reservationminutes;

@@ -71,9 +71,9 @@ def vouchery_view(request):
 
 
 @login_required()
-def nastaveni_view(request):
+def kredit_view(request):
     if request.method == "GET":
-        return render(request, "web/nastaveni.html")
+        return render(request, "web/kredit.html")
     elif request.method == "POST":
         action = request.POST.get("action_type")
 
@@ -143,7 +143,7 @@ def ajax_make_reservation(request):
 
         cena = ((int(rezervace_do) - int(rezervace_od)) / sportoviste.interval_vypujcek_minuty()) * sportoviste.cena_interval
 
-        if user.konto < cena and stav == "0" and not request.user.is_staff:
+        if user.konto < cena and stav == 0 and not request.user.is_staff:
             return HttpResponse(json.dumps({'result': 'nomoney'}), content_type="application/json")
 
         rezervace.zakaznik_id = zakaznik
@@ -180,8 +180,10 @@ def ajax_pay(request):
         return HttpResponse(json.dumps({'result': 'nomoney'}), content_type="application/json")
 
 
-
-
-
+def ajax_delete_rezervace(request):
+    rezervace_id = request.REQUEST.get('rezervace_id')
+    rezervace = Rezervace.objects.get(id=rezervace_id)
+    rezervace.delete()
+    return HttpResponse(json.dumps({'result': 'ok'}), content_type="application/json")
 
 

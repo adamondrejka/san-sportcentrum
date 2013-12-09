@@ -3,9 +3,12 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import logout, authenticate, login
 from django.contrib.auth.decorators import login_required
+from django.core.urlresolvers import reverse_lazy
 from django.shortcuts import redirect, render
-from accounts.forms import RegistrationForm
+from django.views.generic import UpdateView
+from accounts.forms import RegistrationForm, UzivatelForm
 from accounts.utils import send_activation_email, make_activation_string, check_activation_string
+from administration.views import StaffMemberRequiredMixin
 from core.models import User
 
 
@@ -115,5 +118,18 @@ def activate_account_view(request):
 
         return render(request, 'accounts/activation.html')
 
+
 def detail_view(request):
-    return render(request, 'accounts/detail.html')
+    if request.method == "POST":
+        form = UzivatelForm(request.POST, instance=request.user)
+        if form.is_valid():
+            form.save()
+            messages.info(request, u"Změny byly uloženy")
+            return redirect(reverse_lazy('accounts-detail'))
+        else:
+            return render(request, 'accounts/detail.html', {'form': form})
+    elif request.method == "GET":
+
+        form = UzivatelForm(instance=request.user)
+        return render(request, 'accounts/detail.html', {'form': form})
+

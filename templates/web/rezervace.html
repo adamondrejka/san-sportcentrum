@@ -81,7 +81,7 @@
                               {% endfor %}
                            </select>
                         </div>
-                    </div>
+
                      {% endif %}
                     <input type="hidden" name="rezervace_datum" id="rezervace_datum">
                     <input type="hidden" name="rezervace_od" id="rezervace_od">
@@ -98,10 +98,12 @@
             <button type="button" class="btn btn-default" data-dismiss="modal">Zavřít</button>
             {% if user.is_authenticated %}
               <button type="submit" class="btn btn-primary">Rezervovat</button>
-                <a href="javascript:void(0)" onclick="pay()" class="btn btn-info">Zaplatit</a>
+              <span id="admin_buttons">
+              <a href="javascript:void(0)" onclick="pay()" class="btn btn-info">Zaplatit</a>
+              <a href="javascript:void(0)" onclick="cancelReservation()" class="btn btn-danger">Zrušit rezervaci</a>
+              </span>
               {% endif %}
           </div>
-            </div>
           </form>
         </div><!-- /.modal-content -->
       </div><!-- /.modal-dialog -->

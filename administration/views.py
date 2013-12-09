@@ -25,7 +25,6 @@ def staff_member_required2(view_func):
         return redirect('accounts-login')
     return _checklogin
 
-
 class StaffMemberRequiredMixin(object):
     """
     View mixin which requires that the user is authenticated.

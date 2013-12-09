@@ -4,6 +4,7 @@ from django.conf.urls import patterns, include, url
 # Uncomment the next two lines to enable the admin:
 # from django.contrib import admin
 # admin.autodiscover()
+from django.contrib.auth.decorators import login_required
 from administration.views import VoucherList, VoucherCreate, VoucherUpdate, VoucherDelete, SportovisteList, SportovisteCreate, SportovisteUpdate, SportovisteDelete, SportovniCentrumList, SportovniCentrumCreate, SportovniCentrumUpdate, SportovniCentrumDelete, RezervaceDelete, RezervaceDetail, RezervaceList
 
 
