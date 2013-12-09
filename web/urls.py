@@ -13,11 +13,10 @@ urlpatterns = patterns('',
     url(r'^o-nas/$', 'web.views.onas_view', name='web-onas'),
     url(r'^vouchery/$', 'web.views.vouchery_view', name='web-vouchery'),
     url(r'^nastaveni/$', 'web.views.nastaveni_view', name='web-nastaveni'),
+    url(r'^ajax/get_sportoviste/$', 'web.views.ajax_get_sportoviste', name='ajax-get-sportoviste'),
+    url(r'^ajax/get_calendar/$', 'web.views.ajax_get_table_calendar', name='ajax-get-table-calendar'),
+    url(r'^ajax/make_reservation/$', 'web.views.ajax_make_reservation', name='ajax-make_reservation'),
+    url(r'^ajax/pay/$', 'web.views.ajax_pay', name='ajax-pay'),
 
-    # Uncomment the admin/doc line below to enable admin documentation:
-    # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
-
-    # Uncomment the next line to enable the admin:
-    # url(r'^admin/', include(admin.site.urls)),
 )
 

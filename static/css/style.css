@@ -1,0 +1,97 @@
+
+#rezervace {
+    width: 100%;
+}
+
+.reservation-labels {
+    float: left;
+    display: block;
+    width: 20%;
+    font-size: 110%;
+    font-weight: bold;
+}
+
+
+.reservation-labels div {
+    height: 30px;
+    border: 1px solid #ddd;
+    padding-left: 10px;
+    padding-top: 7px;
+}
+
+.reservation-labels div:nth-child(odd) {
+    background-color: #efefef;
+}
+
+.reservation-row {
+	display: block;
+	line-height:30px;
+	height: 30px;
+	width: 100%;
+}
+
+.reservation-row:nth-child(odd) {
+    background-color: #efefef;
+}
+
+.reservation-units {
+    display: block;
+	width: 80%;
+	float: left;
+	overflow: auto;
+}
+
+.reservation-unit-holder {
+    width: 2000px   ;
+}
+
+.reservation-unit {
+    display: block;
+    float: left;
+    border: 1px solid #ddd;
+    margin: 0;
+    height: 30px;
+    width: 50px;
+}
+
+.reservation-clickable:hover {
+    background-color: cornflowerblue;
+    cursor: pointer;
+}
+
+.reservation-times {
+    font-weight: bold;
+    background-color: #bbb;
+    text-align: center;
+}
+
+.reservation-reserved {
+    background-color: #b94a48;
+}
+
+.reservation-myreservation{
+    background-color: #e38d13;
+}
+
+.reservation-paid {
+    background-color: #3e8f3e;
+}
+
+.reservation-working {
+    background-color: #7aba7b;
+}
+
+.reservation-pass {
+    background-color: indigo;
+}
+
+.legend {
+    color: white;
+    display: block;
+    float:left;
+    width: 150px;
+    height: 25px;
+    text-align: center;
+    vertical-align: middle;
+    font-weight: bold;
+}

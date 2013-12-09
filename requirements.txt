@@ -2,3 +2,4 @@ Django
 django-debug-toolbar
 django-bootstrap-form
 django-calendarium
+python-dateutil

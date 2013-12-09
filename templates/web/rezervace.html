@@ -9,7 +9,7 @@
             {% csrf_token %}
             <div class="form-group">
                 <label for="sportovni_centrum" class="sr-only">Sportovní centrum:</label>
-                <select class="form-control">
+                <select class="form-control" id="sportovni_centrum">
                     {% for sc in sport_centers %}
                         <option value="{{ sc.id }}">{{ sc }}</option>
                     {% endfor %}
@@ -18,13 +18,96 @@
             </div>
         </form>
 
+    <br>
     <div id="sportoviste">
 
     </div>
+    <br>
+    <div id="rezervace">
 
-    <div id="rezervace"></div>
+    </div>
 
+    <div class="modal fade" id="reservation-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+        <form class="form-horizontal" method="post" action="/ajax/make_reservation/" id="reservation_form">
+        {% csrf_token %}
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title" id="myModalLabel">Rezervovat</h4>
+          </div>
+          <div class="modal-body">
+              {% if user.is_authenticated %}
+                    <h3 id="cena"></h3>
+                    <div class="form-group">
+                        <label for="rezervace_od_txt" class="col-sm-2 control-label">Od</label>
+                        <div class="col-sm-10 col-md-4 col-lg-4">
+                          <input type="text" class="form-control input-sm" id="rezervace_od_txt" name="rezervace_od_txt" disabled="disabled">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="rezervace_do" class="col-sm-2 control-label">Do</label>
+                        <div class="col-sm-10  col-md-4 col-lg-4">
+                          <select class="form-control input-sm" id="rezervace_do" name="rezervace_do">
+                              <option>Test</option>
+                           </select>
+                        </div>
+                    </div>
 
+                    <div class="form-group">
+                        <label for="rezervace_datum" class="col-sm-2 control-label">Datum</label>
+                        <div class="col-sm-10  col-md-4 col-lg-4">
+                          <input type="text" class="form-control input-sm" id="rezervace_datum_txt" name="rezervace_datum_txt" disabled="disabled">
+
+                        </div>
+                    </div>
+                     {% if user.is_superuser %}
+                       <div class="form-group">
+                        <label for="zakaznik" class="col-sm-2 control-label">Do</label>
+                        <div class="col-sm-10  col-md-4 col-lg-4">
+                          <select class="form-control input-sm" id="zakaznik" name="zakaznik">
+                              {% for user in users %}
+                              <option value="{{ user.id }}">{{ user.get_full_name }}</option>
+                              {% endfor %}
+                           </select>
+                        </div>
+
+                        <div class="form-group">
+                        <label for="stav" class="col-sm-2 control-label">Stav</label>
+                        <div class="col-sm-10  col-md-4 col-lg-4">
+                          <select class="form-control input-sm" id="stav" name="stav">
+                              {% for stav_id, stav in states %}
+                              <option value="{{ stav_id }}">{{ stav }}</option>
+                              {% endfor %}
+                           </select>
+                        </div>
+                    </div>
+                     {% endif %}
+                    <input type="hidden" name="rezervace_datum" id="rezervace_datum">
+                    <input type="hidden" name="rezervace_od" id="rezervace_od">
+                    <input type="hidden" name="sportoviste_misto" id="sportoviste_misto">
+                    <input type="hidden" name="rezervace_id" id="rezervace_id" value="">
+                    <input type="hidden" id="cena_interval" value="">
+                    <input type="hidden" id="interval" value="">
+
+              {% else %}
+                <p>Pro provedení rezervace se musíte přihlásit</p>
+              {% endif %}
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Zavřít</button>
+            {% if user.is_authenticated %}
+              <button type="submit" class="btn btn-primary">Rezervovat</button>
+                <a href="javascript:void(0)" onclick="pay()" class="btn btn-info">Zaplatit</a>
+              {% endif %}
+          </div>
+            </div>
+          </form>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
+    <br>
     </div>
 
 </div>
@@ -34,10 +117,30 @@
         <div id="datepicker"></div>
     </div>
     <div class="col-lg-4 col-md-4 col-sm-6">
-        <h3>Vybrané časy</h3>
+        <h3>Moje rezervace</h3>
+
+        {% for r in my_reservations %}
+        <p class="small">{{ r.print_user }}</p>
+        {% endfor %}
+
     </div>
     <div class="col-lg-4 col-md-4 col-sm-6">
         <h3>Legenda</h3>
+        {% if user.is_staff %}
+            <div class="legend reservation-paid">Zaplaceno</div> <br>
+            <div class="clearfix"></div>
+            <div class="legend reservation-reserved">Rezervováno</div> <br>
+            <div class="clearfix"></div>
+            <div class="legend reservation-pass">Propadlo</div> <br>
+            <div class="clearfix"></div>
+            <div class="legend reservation-working">Probíhá</div> <br>
+        {% else %}
+            <div class="legend reservation-myreservation">Má rezervace</div> <br>
+            <div class="clearfix"></div>
+            <div class="legend reservation-reserved">Rezervováno</div> <br>
+        {% endif %}
     </div>
 </div>
+
+    <input type="hidden" name="is_admin" id="is_admin" value="{% if user.is_superuser %}1{% else %}0{% endif %}">
 {% endblock %}

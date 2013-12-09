@@ -37,7 +37,7 @@
                 <td>{{ r.stav }}</td>
 
                     <td><a href="{% url 'admin-rezervace-detail' r.id %}" class="btn btn-xs btn-info" id="name">Detail</a>
-
+                        <a href="{% url 'admin-rezervace-delete' r.id %}" class="btn btn-xs btn-danger" id="name">Smazat</a>
                     </td>
 
                 </tr>

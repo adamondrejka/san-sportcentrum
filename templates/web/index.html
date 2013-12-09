@@ -3,8 +3,15 @@
 {% block content %}
 <div class="row-fluid">
     <div class="col-lg-12 col-md-12 col-sm-12">
-        <h1>Hlavní strana</h1>
-
+        {% for sc in sportovni_centra %}
+        <h2>{{ sc.nazev }}</h2>
+        <p>{{ sc.popis }}</p>
+            <strong>Sportoviště centra:</strong>
+            {% for s in sc.sportoviste_set.all %}
+                <h4>{{ s.nazev }}</h4>
+                <p>{{ s.popis }}</p>
+                {% endfor %}
+        {% endfor %}
     </div>
 </div>
 {% endblock %}
