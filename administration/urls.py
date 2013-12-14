@@ -33,6 +33,8 @@ urlpatterns = patterns('',
     url(r'^uzivatel/add/$', UzivatelCreate.as_view(), name='admin-uzivatel-create'),
     url(r'^uzivatel/(?P<pk>\d+)/$', UzivatelUpdate.as_view(), name='admin-uzivatel-update'),
     url(r'^uzivatel/delete/(?P<pk>\d+)/$', UzivatelDelete.as_view(), name='admin-uzivatel-delete'),
+    url(r'^uzivatel/delete/(?P<pk>\d+)/$', UzivatelDelete.as_view(), name='admin-uzivatel-delete'),
 
+    url(r'^vouchers-generate/$', 'administration.views.generate_vouchers', name='admin-voucher-generate'),
 )
 

@@ -8,6 +8,8 @@ var is_admin;
 $(document).ready(function(){
     changeSportovniCentrum();
 
+
+
     $("#reservation_form").on('submit', function(e) {
         e.preventDefault();
         var postData = $(this).serializeArray();
@@ -28,13 +30,19 @@ $(document).ready(function(){
 
             $("#reservation-modal").modal('hide');
 
+
         });
 
     });
 
     $("#datepicker").change(function(){
         changeSportoviste(null);
-    })
+    });
+
+    $("#sportovni_centrum").change(function(){
+        changeSportovniCentrum();
+    });
+
 
     is_admin = ($("#is_admin").val() == "1")? true : false;
 
@@ -46,11 +54,18 @@ function pay(){
 
     }).done(function(data){
             if (data.result == 'ok') {
+                changeSportoviste(null);
                 alert("Úspěšně zaplaceno");
+            }
+            else if (data.result == 'alreadypaid') {
+                changeSportoviste(null);
+                alert("Rezervace jiz byla zaplacena");
             }
             else {
                 alert("Nedostatek peněz na kontě");
             }
+
+            $("#reservation-modal").modal('hide');
         })
 }
 function cancelReservation(){
@@ -59,8 +74,11 @@ function cancelReservation(){
 
     }).done(function(data){
             if (data.result == 'ok') {
+                changeSportoviste(null);
                 alert("Úspěšně zrušeno");
             }
+
+            $("#reservation-modal").modal('hide');
         })
 }
 
@@ -85,6 +103,8 @@ function changeSportovniCentrum(){
 
             $("#sportoviste").html(txt);
             $('.btn-group').button();
+
+            $("#rezervace").html('');
 
         })
 }

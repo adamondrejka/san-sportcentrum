@@ -4,7 +4,9 @@
 <div class="row-fluid">
     <div class="col-lg-12 col-md-12 col-sm-12">
         <h1>Rezervace</h1>
-
+        {% for m in messages %}
+            <p>{{ m }}</p>
+        {% endfor %}
         <form class="form-inline" role="form" method="post">
             {% csrf_token %}
             <div class="form-group">
@@ -97,7 +99,7 @@
           <div class="modal-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal">Zavřít</button>
             {% if user.is_authenticated %}
-              <button type="submit" class="btn btn-primary">Rezervovat</button>
+              <button type="submit" class="btn btn-primary">Potvrdit</button>
               <span id="admin_buttons">
               <a href="javascript:void(0)" onclick="pay()" class="btn btn-info">Zaplatit</a>
               <a href="javascript:void(0)" onclick="cancelReservation()" class="btn btn-danger">Zrušit rezervaci</a>
@@ -122,7 +124,7 @@
         <h3>Moje rezervace</h3>
 
         {% for r in my_reservations %}
-        <p class="small">{{ r.print_user }}</p>
+        <p class="small">{{ r.print_user }} - <a href="{% url 'web-cancel-reservation' %}?id_rezervace={{ r.id }}">Zrušit</a></p>
         {% endfor %}
 
     </div>

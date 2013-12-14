@@ -9,7 +9,7 @@
     </script>
 
     <div class="row">
-        <div class="col-lg-6 col-md-12 col-sm-12">
+        <div class="col-lg-3 col-md-6 col-sm-12">
 
             {% if messages %}
                 {% for message in messages %}
@@ -24,7 +24,7 @@
                     <label class="control-label" for="email">Email</label>
 
                     <div class="controls">
-                        <input type="email" class="input-block-level" name="email" placeholder="E-Mail"
+                        <input type="email" class="input-block-level form-control" name="email" placeholder="E-Mail"
                                required="required">
                     </div>
                 </div>
@@ -33,10 +33,11 @@
                     <label class="control-label" for="passwords">Heslo</label>
 
                     <div class="controls">
-                        <input type="password" class="input-block-level" name="password" placeholder="Heslo"
+                        <input type="password" class="input-block-level form-control" name="password" placeholder="Heslo"
                                required="required">
                     </div>
                 </div>
+                <br>
                 <!-- <label class="checkbox"><input type="checkbox" value="remember-me"> Remember me</label> -->
                 <button class="btn btn-primary" type="submit">Přihlásit se</button>
             </form>

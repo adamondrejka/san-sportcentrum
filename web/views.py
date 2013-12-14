@@ -5,6 +5,7 @@ import json
 from dateutil import parser
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.db import transaction
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.utils import timezone
@@ -21,7 +22,7 @@ def rezervace_view(request):
     sport_centers = SportovniCentrum.objects.all().order_by('nazev')
     users = User.objects.all().order_by('prijmeni') if request.user.is_superuser else []
     states = Rezervace.STAV_CHOICES
-    my_reservations = Rezervace.objects.filter(zakaznik_id=request.user.id, rezervace_od__gte=datetime.now()) if request.user else []
+    my_reservations = Rezervace.objects.filter(zakaznik_id=request.user.id, rezervace_od__gte=datetime.now(), stav=0) if request.user else []
     return render(request, 'web/rezervace.html', {'sport_centers': sport_centers, 'users': users, 'states': states,
                                                   'my_reservations': my_reservations})
 
@@ -40,9 +41,9 @@ def vouchery_view(request):
         vouchers = Voucher.objects.filter(uplatnil_uzivatel=request.user)
         return render(request, 'web/vouchery.html', {'vouchers': vouchers})
     elif request.method == "POST":
-        id_voucher = request.POST.get('id_voucher')
-        if id_voucher:
-            try:
+        try:
+            id_voucher = request.POST.get('id_voucher')
+            if id_voucher:
                 voucher = Voucher.objects.get(id=id_voucher)
 
                 date_now = timezone.now()
@@ -61,11 +62,10 @@ def vouchery_view(request):
                     messages.error(request, u"Bohužel, platnost voucheru je od {0} do {1}".format(voucher.platny_od, voucher.platny_do))
 
                 return redirect('web-vouchery')
-
-            except Voucher.DoesNotExist:
-                messages.error(request, u"Voucher neexistuje")
-        else:
-            messages.error(request, u"Nebyl zadan voucher")
+            else:
+                messages.error(request, u"Nebyl zadan voucher")
+        except Exception:
+            messages.error(request, u"Voucher neexistuje")
 
         return redirect('web-vouchery')
 
@@ -75,19 +75,42 @@ def kredit_view(request):
     if request.method == "GET":
         return render(request, "web/kredit.html")
     elif request.method == "POST":
-        action = request.POST.get("action_type")
+        try:
+            action = request.POST.get("action_type")
 
-        if action == "money_inc":
-            # dobiti kreditu
-            money = request.POST.get("amount_money")
+            if action == "money_inc":
+                # dobiti kreditu
+                money = request.POST.get("amount_money")
 
-            if money:
-                request.user.add_money(float(money))
-                messages.success(request, u"Kredit byl navýšen o částku {0} Kč".format(money))
+                if money:
+                    request.user.add_money(float(money))
+                    messages.success(request, u"Kredit byl navýšen o částku {0} Kč".format(money))
+                else:
+                    messages.error(request, u"Nepvoedlo se navýšit kredit")
+        except Exception:
+            messages.error(request, u"Nepodařilo se navýšit kredit")
+
+        return redirect('web-kredit')
+
+@login_required
+def cancel_reservation(request):
+    if request.method == "GET":
+        try:
+            id_rezervace = request.GET.get('id_rezervace')
+            rezervace = Rezervace.objects.get(id=id_rezervace)
+
+            date_now = timezone.now()
+            date = date_now.replace(hour=date_now.hour-5)
+
+            if rezervace.rezervace_od < date and (rezervace.zakaznik == request.user or request.user.is_staff):
+                rezervace.delete()
+                messages.success(request, u"Úspěšně zrušeno")
             else:
-                messages.error(request, u"Nepvoedlo se navýšit kredit")
+                messages.error(request, u"Nepodařilo se zrušit rezervaci, je po termínu nebo nemáte oprvánění")
+        except Exception, e:
+            messages.error(request, u"Nepodařilo se zrušit rezervaci")
 
-        return redirect('web-vouchery')
+        return redirect('rezervace')
 
 
 def ajax_get_sportoviste(request):
@@ -109,6 +132,15 @@ def ajax_get_table_calendar(request):
         mista = sportoviste.sportovistemisto_set.all().order_by('nazev')
         result_sportoviste = sportoviste.serialize()
         result_mista = [m.serialize(datum) for m in mista]
+
+        # oznac uzivatelovi jeho rezervace
+        if not request.user.is_staff:
+            for m in result_mista:
+                for r in m['rezervace']:
+                    is_my = False
+                    if r['zakaznik_id'] == request.user.id:
+                        is_my = True
+                    r['is_my'] = is_my
 
         result = {
             'result_sportoviste': result_sportoviste,
@@ -153,11 +185,16 @@ def ajax_make_reservation(request):
         datum_od = parser.parse(datum).replace(hour=od_hodiny, minute=od_minuty)
         datum_do = parser.parse(datum).replace(hour=do_hodiny, minute=do_minuty)
 
-        rezervace.rezervace_od = datum_od
-        rezervace.rezervace_do = datum_do
-        rezervace.stav = stav
-        rezervace.cena = cena
-        rezervace.save()
+        with transaction.atomic():
+            rezervace.rezervace_od = datum_od
+            rezervace.rezervace_do = datum_do
+            rezervace.stav = stav
+            rezervace.cena = cena
+            rezervace.zaplaceno = True
+            rezervace.save()
+
+            user.konto -= cena
+            user.save()
 
         return HttpResponse(json.dumps({'result': 'ok'}), content_type="application/json")
 
@@ -167,8 +204,14 @@ def ajax_pay(request):
     rezervace = Rezervace.objects.get(id=rezervace_id)
     zakaznik = rezervace.zakaznik
 
-    if zakaznik.konto >= rezervace.cena:
+    if rezervace.zaplaceno:
         rezervace.stav = 2
+        rezervace.save()
+        return HttpResponse(json.dumps({'result': 'alreadypaid'}), content_type="application/json")
+
+    elif not rezervace.zaplaceno and zakaznik.konto >= rezervace.cena:
+        rezervace.stav = 2
+        rezervace.zaplaceno = True
         rezervace.save()
 
         zakaznik.konto -= rezervace.cena
@@ -182,8 +225,13 @@ def ajax_pay(request):
 
 def ajax_delete_rezervace(request):
     rezervace_id = request.REQUEST.get('rezervace_id')
-    rezervace = Rezervace.objects.get(id=rezervace_id)
-    rezervace.delete()
+    with transaction.atomic():
+        rezervace = Rezervace.objects.get(id=rezervace_id)
+        if rezervace.zaplaceno:
+            request.user.konto += rezervace.cena
+            request.user.save()
+
+        rezervace.delete()
     return HttpResponse(json.dumps({'result': 'ok'}), content_type="application/json")
 
 

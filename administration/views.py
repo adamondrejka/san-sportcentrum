@@ -1,9 +1,12 @@
 # -*- coding: utf-8 -*-
 # Create your views here.
 from functools import wraps
+import random
+from dateutil import parser
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse_lazy
+from django.db import transaction
 from django.shortcuts import render, redirect
 from django.utils.decorators import method_decorator
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, DetailView
@@ -268,3 +271,35 @@ class UzivatelDelete(StaffMemberRequiredMixin, DeleteView):
     model = User
     success_url = reverse_lazy('admin-uzivatele')
     template_name = 'administration/check_delete.html'
+
+
+def generate_vouchers(request):
+
+    def random_code():
+        return random.randint(10000000, 99999999999)
+
+    if request.method == "POST":
+        count = int(request.POST.get('voucher_count', 0))
+        platnost_od = request.POST.get('platnost_od')
+        platnost_do = request.POST.get('platnost_do')
+        castka = float(request.POST.get('castka', 0))
+        user = request.user
+
+        if count and platnost_do and platnost_od and castka:
+            with transaction.atomic():
+                for i in xrange(0, count):
+                    v = Voucher()
+                    v.castka = castka
+                    v.vydal_uzivatel = user
+                    v.platny_od = parser.parse(platnost_od)
+                    v.platny_do = parser.parse(platnost_do)
+                    v.id = random_code()
+                    v.save()
+
+                messages.success(request, u"Úspěšně vygenerováno")
+
+        else:
+            messages.info(request, u"Nevygenerováno, musíte zadat všechny hodnoty")
+
+        return redirect('admin-vouchery')
+

@@ -165,6 +165,8 @@ class Rezervace(models.Model):
     rezervace_od = models.DateTimeField(verbose_name=u"Rezervace od")
     rezervace_do = models.DateTimeField(verbose_name=u"Rezervace do")
     stav = models.SmallIntegerField(choices=STAV_CHOICES)
+    # je rezervace jiz zaplacena?
+    zaplaceno = models.BooleanField(default=False)
 
     def __unicode__(self):
         return u"{0} - {1} - {2}".format(self.misto.sportoviste, self.misto.nazev, self.zakaznik.get_full_name())
@@ -183,7 +185,8 @@ class Rezervace(models.Model):
             'rezervace_do_alt': self.rezervace_do.minute + self.rezervace_do.hour * 60 + 60,
             'rezervace_datum': self.rezervace_od.strftime("%m/%d/%Y"),
             'cena': self.cena,
-            'stav': self.stav
+            'stav': self.stav,
+            'zaplaceno': self.zaplaceno
         }
 
 
