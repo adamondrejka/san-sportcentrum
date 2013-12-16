@@ -3,3 +3,4 @@ django-debug-toolbar
 django-bootstrap-form
 django-calendarium
 python-dateutil
+model_mommy

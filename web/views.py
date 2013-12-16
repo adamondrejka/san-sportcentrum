@@ -50,9 +50,8 @@ def vouchery_view(request):
 
                 if voucher.uplatnil_uzivatel:
                     messages.error(request, u"Voucher již byl uplatněn")
-                    return redirect('web-vouchery')
 
-                if voucher.platny_od < date_now < voucher.platny_do:
+                elif voucher.platny_od < date_now < voucher.platny_do:
                     voucher.uplatnil_uzivatel = request.user
                     voucher.save()
                     request.user.add_money(voucher.castka)
@@ -61,7 +60,6 @@ def vouchery_view(request):
                 else:
                     messages.error(request, u"Bohužel, platnost voucheru je od {0} do {1}".format(voucher.platny_od, voucher.platny_do))
 
-                return redirect('web-vouchery')
             else:
                 messages.error(request, u"Nebyl zadan voucher")
         except Exception:
@@ -146,13 +144,17 @@ def ajax_get_table_calendar(request):
             'result_sportoviste': result_sportoviste,
             'result_mista': result_mista
         }
+    else:
+        result = {
+            'status': 'error'
+        }
 
-        return HttpResponse(json.dumps(result), content_type="application/json")
+    return HttpResponse(json.dumps(result), content_type="application/json")
 
 
 def ajax_make_reservation(request):
 
-    def getHoursAndMinutes(minutes):
+    def get_hours_and_minutes(minutes):
         return minutes / 60, minutes % 60
 
     if request.method == "POST":
@@ -176,27 +178,33 @@ def ajax_make_reservation(request):
         cena = ((int(rezervace_do) - int(rezervace_od)) / sportoviste.interval_vypujcek_minuty()) * sportoviste.cena_interval
 
         if user.konto < cena and stav == 0 and not request.user.is_staff:
-            return HttpResponse(json.dumps({'result': 'nomoney'}), content_type="application/json")
+            result = {'result': 'nomoney'}
 
-        rezervace.zakaznik_id = zakaznik
-        rezervace.misto_id = misto
-        od_hodiny, od_minuty = getHoursAndMinutes(int(rezervace_od))
-        do_hodiny, do_minuty = getHoursAndMinutes(int(rezervace_do))
-        datum_od = parser.parse(datum).replace(hour=od_hodiny, minute=od_minuty)
-        datum_do = parser.parse(datum).replace(hour=do_hodiny, minute=do_minuty)
+        else:
+            rezervace.zakaznik_id = zakaznik
+            rezervace.misto_id = misto
+            od_hodiny, od_minuty = get_hours_and_minutes(int(rezervace_od))
+            do_hodiny, do_minuty = get_hours_and_minutes(int(rezervace_do))
+            datum_od = parser.parse(datum).replace(hour=od_hodiny, minute=od_minuty)
+            datum_do = parser.parse(datum).replace(hour=do_hodiny, minute=do_minuty)
 
-        with transaction.atomic():
-            rezervace.rezervace_od = datum_od
-            rezervace.rezervace_do = datum_do
-            rezervace.stav = stav
-            rezervace.cena = cena
-            rezervace.zaplaceno = True
-            rezervace.save()
+            with transaction.atomic():
+                rezervace.rezervace_od = datum_od
+                rezervace.rezervace_do = datum_do
+                rezervace.stav = stav
+                rezervace.cena = cena
+                rezervace.zaplaceno = True
+                rezervace.save()
 
-            user.konto -= cena
-            user.save()
+                user.konto -= cena
+                user.save()
 
-        return HttpResponse(json.dumps({'result': 'ok'}), content_type="application/json")
+            result = {'result': 'ok'}
+
+    else:
+        result = {'result': 'error'}
+
+    return HttpResponse(json.dumps(result), content_type="application/json")
 
 
 def ajax_pay(request):
@@ -204,23 +212,27 @@ def ajax_pay(request):
     rezervace = Rezervace.objects.get(id=rezervace_id)
     zakaznik = rezervace.zakaznik
 
-    if rezervace.zaplaceno:
-        rezervace.stav = 2
-        rezervace.save()
-        return HttpResponse(json.dumps({'result': 'alreadypaid'}), content_type="application/json")
+    if request.user.is_staff:
+        if rezervace.zaplaceno:
+            rezervace.stav = 2
+            rezervace.save()
+            result = {'result': 'alreadypaid'}
 
-    elif not rezervace.zaplaceno and zakaznik.konto >= rezervace.cena:
-        rezervace.stav = 2
-        rezervace.zaplaceno = True
-        rezervace.save()
+        elif not rezervace.zaplaceno and zakaznik.konto >= rezervace.cena:
+            rezervace.stav = 2
+            rezervace.zaplaceno = True
+            rezervace.save()
 
-        zakaznik.konto -= rezervace.cena
-        zakaznik.save()
+            zakaznik.konto -= rezervace.cena
+            zakaznik.save()
 
-        return HttpResponse(json.dumps({'result': 'ok'}), content_type="application/json")
-
+            result = {'result': 'ok'}
+        else:
+            result = {'result': 'nomoney'}
     else:
-        return HttpResponse(json.dumps({'result': 'nomoney'}), content_type="application/json")
+        result = {'result': 'accesserror'}
+
+    return HttpResponse(json.dumps(result), content_type="application/json")
 
 
 def ajax_delete_rezervace(request):
