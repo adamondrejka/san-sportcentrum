@@ -17,7 +17,7 @@ urlpatterns = patterns('',
     url(r'^cancel_reservation/$', 'web.views.cancel_reservation', name='web-cancel-reservation'),
     url(r'^ajax/get_sportoviste/$', 'web.views.ajax_get_sportoviste', name='ajax-get-sportoviste'),
     url(r'^ajax/get_calendar/$', 'web.views.ajax_get_table_calendar', name='ajax-get-table-calendar'),
-    url(r'^ajax/make_reservation/$', 'web.views.ajax_make_reservation', name='ajax-make_reservation'),
+    url(r'^ajax/make_reservation/$', 'web.views.ajax_make_reservation', name='ajax-make-reservation'),
     url(r'^ajax/pay/$', 'web.views.ajax_pay', name='ajax-pay'),
     url(r'^ajax/delete_reservation/$', 'web.views.ajax_delete_rezervace', name='ajax-delete-rezervace'),
 )
